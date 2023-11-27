@@ -12,4 +12,10 @@ public class TileData : ScriptableObject
 
     public TileBase TopFlat;
     public TileBase TopDown;
+
+    public TilePicker VoidBottom;
+    public TilePicker VoidLeft;
+    public TilePicker VoidRight;
+
+    public TileBase Void;
 }

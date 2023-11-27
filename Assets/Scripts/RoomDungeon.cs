@@ -27,19 +27,12 @@ public class RoomDungeon : Dungeon
 
     public SpriteRenderer DjikstraMapRenderer;
 
-    public override void Next()
+    protected override void SpawnPlayer()
     {
-        base.Next();
-
-        if(_graph == null)
-        {
-            Generate();
-        }
-        else
-        {
-
-        }
+        base.SpawnPlayer();
+        _player.transform.position = Rooms[0].Center;
     }
+
     public override void Generate()
     {
         base.Generate();
@@ -103,7 +96,7 @@ public class RoomDungeon : Dungeon
             _dPoints[i] = new DRefPoint<Room>(room.Center, room);
         }
 
-        _graph = new DelaunayGraph(_dPoints, 0, Width, 0, Height);
+        _graph = new DelaunayGraph(_dPoints, 0, Width * 3, 0, Height * 3);
 
 
         #endregion
@@ -160,7 +153,7 @@ public class RoomDungeon : Dungeon
 
         LinkedList<Tile> toVisit = new LinkedList<Tile>();
 
-        Tile firstTile = Tiles[Mathf.RoundToInt(Rooms[0].Center.x), Mathf.RoundToInt(Rooms[0].Center.y)];
+        Tile firstTile = Tiles[Mathf.RoundToInt(Rooms[0].x + Rooms[0].Width / 2), Mathf.RoundToInt(Rooms[0].y + Rooms[0].Height / 2)];
         firstTile.DjikstraMap = 0;
 
         toVisit.AddFirst(firstTile);
@@ -474,8 +467,9 @@ public class RoomDungeon : Dungeon
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(new Vector3(Width / 2f, Height / 2f), new Vector3(Width, Height));
+        Gizmos.DrawWireCube(new Vector3(Width / 2f * 3f, Height / 2f * 3f), new Vector3(Width * 3f, Height * 3f));
 
+        Gizmos.color = Color.red;
         foreach (Room room in Rooms)
         {
             Handles.Label(room.TopLeft, $"_{room.Index}");

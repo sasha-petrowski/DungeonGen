@@ -16,3 +16,7 @@ MonoBehaviour:
   Wall: {fileID: 11400000, guid: 0e7d135f2da77a141b41ce0ad2422314, type: 2}
   TopFlat: {fileID: 11400000, guid: 50ebed450dee98549b19db8bc8909a32, type: 2}
   TopDown: {fileID: 11400000, guid: 777b45a92af2d9249963cf05aef6b110, type: 2}
+  VoidBottom: {fileID: 11400000, guid: a4d4cbd2154e5884ab7fa9fd34e6a1c6, type: 2}
+  VoidLeft: {fileID: 11400000, guid: 23872589de1e8c240839e8a1bb0534d0, type: 2}
+  VoidRight: {fileID: 11400000, guid: d536f091534ff4542b2b1ead22c436f2, type: 2}
+  Void: {fileID: 11400000, guid: ce2c6127aa24fa8469dd07c763a540df, type: 2}

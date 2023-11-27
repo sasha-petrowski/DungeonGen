@@ -19,8 +19,8 @@ namespace Delaunay
         {
             _points = points;
 
-            float stepX = (minX - maxX) * 2;
-            float stepY = (minY - maxY) * 2;
+            float stepX = (minX - maxX) * 10;
+            float stepY = (minY - maxY) * 10;
 
             Root = new DTriangle(
                 new DVirtualPoint(new Vector2((minX + maxX) / 2, maxY + stepY)), //top

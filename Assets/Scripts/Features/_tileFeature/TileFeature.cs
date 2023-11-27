@@ -6,7 +6,7 @@ public class TileFeature : Feature
 {
     public override Vector2 GetPosition()
     {
-        return new Vector2(Tile.x + 0.5f, Tile.y + 0.5f);
+        return new Vector2((Tile.x + 0.5f) * 3, (Tile.y + 0.5f) * 3);
     }
 
     public Tile Tile;

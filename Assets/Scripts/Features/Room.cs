@@ -58,9 +58,9 @@ public class Room : Feature
         this.y = y;
         Dungeon = dungeon;
 
-        Center = new Vector3(x + Width / 2f, y + Height / 2f, 0);
-        TopLeft = new Vector3(x, y + Height, 0);
-        Size = new Vector3(Width, Height, 0);
+        Center = new Vector3(x + Width / 2f, y + Height / 2f, 0) * 3;
+        TopLeft = new Vector3(x, y + Height, 0) * 3;
+        Size = new Vector3(Width, Height, 0) * 3;
 
         Place();
 
