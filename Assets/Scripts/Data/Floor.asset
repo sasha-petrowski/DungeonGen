@@ -22,8 +22,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74a16f08ad2e9584a8c9656a40e8242a, type: 2}
   - {fileID: 11400000, guid: af08c526cbf629f41afe50d0cdd1d732, type: 2}
   Offset: 10000
-  Octaves: 2
+  Octaves: 3
   Scale: 10
-  Persistance: 0.748
-  Continuity: 0.5
+  Persistance: 0.6
+  Continuity: 0.6
+  Multiplier: 1.5
+  Minus: 0.1
   RandomBump: 1

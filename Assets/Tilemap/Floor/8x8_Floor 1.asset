@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 8x8_Floor_Flat 3
+  m_Name: 8x8_Floor 1
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -581845897, guid: c7d8124fa6f121144b77964cdff376ce, type: 3}
+  m_Sprite: {fileID: -2109615489, guid: c7d8124fa6f121144b77964cdff376ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

@@ -16,15 +16,9 @@ public class TileFeature : Feature
     {
         #region Test bounds and tile is empty
         if (x < 0 | y < 0 | x >= dungeon.Width | y >= dungeon.Height) return false;
-
-        if (! dungeon.Tiles[x, y].IsEmpty) return false;
         #endregion
 
-        Dungeon = dungeon;
-        Tile = dungeon.Tiles[x, y];
-        Tile.Feature = this;
-
-        return true;
+        return TryPlace(dungeon.Tiles[x, y], dungeon);
     }
     public override bool TryPlace(Tile tile, Dungeon dungeon)
     {
@@ -35,6 +29,7 @@ public class TileFeature : Feature
         Dungeon = dungeon;
         Tile = tile;
         Tile.Feature = this;
+        Tile.Reserved = true;
 
         return true;
     }

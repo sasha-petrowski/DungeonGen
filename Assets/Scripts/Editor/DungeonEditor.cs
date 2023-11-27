@@ -18,7 +18,6 @@ public class DungeonEditor : Editor
 
         if (GUILayout.Button("Generate"))
         {
-            dungeon.Tilemap.ClearAllTiles();
             dungeon.Generate();
         }
         

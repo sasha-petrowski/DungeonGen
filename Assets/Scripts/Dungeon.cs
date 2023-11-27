@@ -23,6 +23,7 @@ public class Dungeon : MonoBehaviour
 
     public TileData TileData;
     public Tilemap Tilemap;
+    public Tilemap Overmap;
 
     private void OnValidate()
     {
@@ -33,7 +34,7 @@ public class Dungeon : MonoBehaviour
     {
         if(Seed == 0)
         {
-            Seed = UnityEngine.Random.RandomRange(int.MinValue, int.MaxValue);
+            Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         }
 
         Generate();
@@ -50,6 +51,9 @@ public class Dungeon : MonoBehaviour
 
     public virtual void Generate()
     {
+        Tilemap.ClearAllTiles();
+        //Overmap.ClearAllTiles();
+
         _seedRandom = new System.Random(Seed);
 
         Tiles = new Tile[Width, Height];
@@ -94,6 +98,7 @@ public class Dungeon : MonoBehaviour
     public void CreateTilemap()
     {
         Tilemap.ClearAllTiles();
+        Overmap.ClearAllTiles();
 
         #region for each tile split into 3x3 and fill depending on neighbors
         for (int x = 0; x < Width; x++)
@@ -141,31 +146,73 @@ public class Dungeon : MonoBehaviour
                 if (center)
                 {
                     //Center
-                    Tilemap.SetTile(new Vector3Int(x * 3, y * 3, 0), TileData.FloorFlat.GetTile(x * 3, y * 3));
+                    Tilemap.SetTile(new Vector3Int(x * 3, y * 3, 0), centerTile.IsHole ? top ? TileData.Void : TileData.VoidBottom.GetTile(x * 3, y * 3) : TileData.FloorFlat.GetTile(x * 3, y * 3));
 
                     //Top
-                    Tilemap.SetTile(new Vector3Int(x * 3, y * 3 + 1, 0), top ? TileData.FloorFlat.GetTile(x * 3, y * 3 + 1) : TileData.Wall.GetTile(x * 3, y * 3 + 1));
+                    Tilemap.SetTile(new Vector3Int(x * 3, y * 3 + 1, 0), top ? centerTile.IsHole ? topTile != null && topTile.IsHole ? TileData.Void : TileData.VoidBottom.GetTile(x * 3, y * 3 + 1) : TileData.FloorFlat.GetTile(x * 3, y * 3 + 1) : TileData.Wall.GetTile(x * 3, y * 3 + 1));
 
                     //Bottom
-                    Tilemap.SetTile(new Vector3Int(x * 3, y * 3 - 1, 0), bottom ? TileData.FloorFlat.GetTile(x * 3, y * 3 - 1) : TileData.TopDown);
+                    if (bottom)
+                    {
+                        Tilemap.SetTile(new Vector3Int(x * 3, y * 3 - 1, 0), centerTile.IsHole ? TileData.Void : TileData.FloorFlat.GetTile(x * 3, y * 3 - 1));
+                    }
+                    else
+                    {
+                        Overmap.SetTile(new Vector3Int(x * 3, y * 3 - 1, 0), TileData.TopDown);
+                    }
 
                     //Right
-                    Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3, 0), right ? TileData.FloorFlat.GetTile(x * 3 + 1, y * 3) : TileData.TopFlat);
+                    if (right)
+                    {
+                        //Right
+                        Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3, 0), centerTile.IsHole ? topRight ? rightTile != null && rightTile.IsHole ? TileData.Void : TileData.VoidRight.GetTile(x * 3 + 1, y * 3) : TileData.VoidBottom.GetTile(x * 3 + 1, y * 3) : TileData.FloorFlat.GetTile(x * 3 + 1, y * 3));
+
+                        //Top Right
+                        Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3 + 1, 0), (top & topRight ? centerTile.IsHole ? topTile != null && topTile.IsHole ? (rightTile != null && !rightTile.IsHole) || (topRight && !topRightTile.IsHole) ? TileData.VoidRight.GetTile(x * 3 + 1, y * 3 + 1) : TileData.Void : TileData.VoidBottom.GetTile(x * 3 + 1, y * 3 + 1) : TileData.FloorFlat.GetTile(x * 3 + 1, y * 3 + 1) : TileData.Wall.GetTile(x * 3 + 1, y * 3 + 1)));
+                    }
+                    else
+                    {
+                        Overmap.SetTile(new Vector3Int(x * 3 + 1, y * 3, 0), TileData.TopFlat);
+                        //Top Right
+                        Overmap.SetTile(new Vector3Int(x * 3 + 1, y * 3 + 1, 0), TileData.TopFlat);
+                    }
 
                     //Left
-                    Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3, 0), left ? TileData.FloorFlat.GetTile(x * 3 - 1, y * 3) : TileData.TopFlat);
+                    if (left)
+                    {
+                        //left
+                        Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3, 0), centerTile.IsHole ? topLeft ? leftTile != null && leftTile.IsHole ? TileData.Void : TileData.VoidLeft.GetTile(x * 3 - 1, y * 3) : TileData.VoidBottom.GetTile(x * 3 - 1, y * 3) : TileData.FloorFlat.GetTile(x * 3 - 1, y * 3));
 
-                    //Top Left
-                    Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3 + 1, 0), left ? (top & topLeft ? TileData.FloorFlat.GetTile(x * 3 - 1, y * 3 + 1) : TileData.Wall.GetTile(x * 3 - 1, y * 3 + 1)) : TileData.TopFlat);
-
-                    //Top Right
-                    Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3 + 1, 0), right ? (top & topRight ? TileData.FloorFlat.GetTile(x * 3 + 1, y * 3 + 1) : TileData.Wall.GetTile(x * 3 + 1, y * 3 + 1)) : TileData.TopFlat);
+                        //Top Left
+                        Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3 + 1, 0), (top & topLeft ? centerTile.IsHole ? topTile != null && topTile.IsHole ? (leftTile != null && !leftTile.IsHole) || (topLeft && !topLeftTile.IsHole) ? TileData.VoidLeft.GetTile(x * 3 - 1, y * 3 + 1) : TileData.Void : TileData.VoidBottom.GetTile(x * 3 - 1, y * 3 + 1) : TileData.FloorFlat.GetTile(x * 3 - 1, y * 3 + 1) : TileData.Wall.GetTile(x * 3 - 1, y * 3 + 1)));
+                    }
+                    else
+                    {
+                        //left
+                        Overmap.SetTile(new Vector3Int(x * 3 - 1, y * 3, 0), TileData.TopFlat);
+                        //Top Left
+                        Overmap.SetTile(new Vector3Int(x * 3 - 1, y * 3 + 1, 0), TileData.TopFlat);
+                    }
 
                     //Bottom Left
-                    Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3 - 1, 0), left & bottom & bottomLeft ? TileData.FloorFlat.GetTile(x * 3 - 1, y * 3 - 1) : (!bottomLeft && (bottomTile != null && (bottomLeftTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomLeftTile.Feature || bottomTile.Feature.Links.Contains(bottomLeftTile.Feature))))) ? TileData.TopDown : TileData.TopFlat);
+                    if (left & bottom & bottomLeft)
+                    {
+                        Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3 - 1, 0), centerTile.IsHole ? leftTile != null && leftTile.IsHole ? TileData.Void : TileData.VoidLeft.GetTile(x * 3 - 1, y * 3 - 1) : TileData.FloorFlat.GetTile(x * 3 - 1, y * 3 - 1));
+                    }
+                    else
+                    {
+                        Overmap.SetTile(new Vector3Int(x * 3 - 1, y * 3 - 1, 0), (leftTile == null & !bottom) || (!bottomLeft && (bottomTile != null && (bottomLeftTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomLeftTile.Feature || bottomTile.Feature.Links.Contains(bottomLeftTile.Feature))))) ? TileData.TopDown : TileData.TopFlat);
+                    }
 
                     //Bottom Right
-                    Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3 - 1, 0), right & bottom & bottomRight ? TileData.FloorFlat.GetTile(x * 3 + 1, y * 3 - 1) : (!bottomRight && (bottomTile != null && (bottomRightTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomRightTile.Feature || bottomTile.Feature.Links.Contains(bottomRightTile.Feature))))) ? TileData.TopDown : TileData.TopFlat);
+                    if (right & bottom & bottomRight)
+                    {
+                        Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3 - 1, 0), centerTile.IsHole ? rightTile != null && rightTile.IsHole ? TileData.Void : TileData.VoidRight.GetTile(x * 3 + 1, y * 3 - 1) : TileData.FloorFlat.GetTile(x * 3 + 1, y * 3 - 1));
+                    }
+                    else
+                    {
+                        Overmap.SetTile(new Vector3Int(x * 3 + 1, y * 3 - 1, 0), (rightTile == null & !bottom) || (!bottomRight && (bottomTile != null && (bottomRightTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomRightTile.Feature || bottomTile.Feature.Links.Contains(bottomRightTile.Feature))))) ? TileData.TopDown : TileData.TopFlat);
+                    }
                 }
                 #endregion
                 #region Void tile
@@ -182,9 +229,9 @@ public class Dungeon : MonoBehaviour
                     }
                     if (bottom)
                     {
-                        Tilemap.SetTile(new Vector3Int(x * 3, y * 3 - 1, 0), TileData.TopDown);
-                        Tilemap.SetTile(new Vector3Int(x * 3 - 1, y * 3 - 1, 0), bottomLeftTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomLeftTile.Feature || bottomTile.Feature.Links.Contains(bottomLeftTile.Feature)) ? TileData.TopDown : TileData.TopFlat);
-                        Tilemap.SetTile(new Vector3Int(x * 3 + 1, y * 3 - 1, 0), bottomRightTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomRightTile.Feature || bottomTile.Feature.Links.Contains(bottomRightTile.Feature)) ? TileData.TopDown : TileData.TopFlat);
+                        Overmap.SetTile(new Vector3Int(x * 3, y * 3 - 1, 0), TileData.TopDown);
+                        Overmap.SetTile(new Vector3Int(x * 3 - 1, y * 3 - 1, 0), bottomLeftTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomLeftTile.Feature || bottomTile.Feature.Links.Contains(bottomLeftTile.Feature)) ? TileData.TopDown : TileData.TopFlat);
+                        Overmap.SetTile(new Vector3Int(x * 3 + 1, y * 3 - 1, 0), bottomRightTile != null && (bottomTile.Feature == null || bottomTile.Feature == bottomRightTile.Feature || bottomTile.Feature.Links.Contains(bottomRightTile.Feature)) ? TileData.TopDown : TileData.TopFlat);
                     }
                     else
                     {
@@ -240,7 +287,13 @@ public class Dungeon : MonoBehaviour
         }
         #endregion
 
-        if(Tilemap.TryGetComponent(out TilemapCollider2D collider))
+        TilemapCollider2D collider;
+
+        if (Tilemap.TryGetComponent(out collider))
+        {
+            collider.ProcessTilemapChanges();
+        }
+        if (Overmap.TryGetComponent(out collider))
         {
             collider.ProcessTilemapChanges();
         }

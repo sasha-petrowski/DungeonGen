@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 
 public class Tile
 {
+    public bool Reserved = false;
+    public bool IsHole = false;
+
     public int x;
     public int y;
 

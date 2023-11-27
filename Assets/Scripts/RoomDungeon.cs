@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Delaunay;
 using Unity.VisualScripting;
+using System;
 
 public class RoomDungeon : Dungeon
 {
@@ -14,6 +15,7 @@ public class RoomDungeon : Dungeon
     public int MinRoomHeight = 4;
 
     public int MaxRooms = 16;
+    public int MaxHoles = 16;
     [Min(1)]
     public int PlaceRoomRetry = 8;
 
@@ -107,9 +109,43 @@ public class RoomDungeon : Dungeon
         LinkRooms();
         DjikstraMap();
         RenderDjikstraMap();
+        AddTileFeatures();
+
 
         Generated = true;
     }
+
+    private void AddTileFeatures()
+    {
+        int i = 0;
+        bool valid;
+
+        while(i < MaxHoles)
+        {
+            valid = true;
+            Tile tile = Tiles[Random(0, Width), Random(0, Height)];
+
+            if (tile.DjikstraMap < 1 | tile.Reserved) continue;
+
+            for (int n = 0; n < 4; n++)
+            {
+                int x = tile.x + Pathfinding.directionX[n];
+                int y = tile.y + Pathfinding.directionY[n];
+
+                if ((x < 0 | y < 0 | x >= Width | y >= Height) || Tiles[x, y].Reserved)
+                {
+                    valid = false;
+                }
+            }
+
+            if(valid)
+            {
+                tile.IsHole = true;
+                i++;
+            }
+        }
+    }
+
     private void RenderDjikstraMap()
     {
 
@@ -202,6 +238,7 @@ public class RoomDungeon : Dungeon
             {
                 if(neighbor.Feature is Room neighborRoom)
                 {
+                    neighbor.Reserved = true;
                     if (!room.Links.Contains(neighborRoom))
                     {
                         room.Links.Add(neighborRoom);
@@ -475,7 +512,23 @@ public class RoomDungeon : Dungeon
             Handles.Label(room.TopLeft, $"_{room.Index}");
             Gizmos.DrawWireCube(room.Center, room.Size);
         }
-        
+        if(Tiles != null)
+        {
+            foreach (Tile tile in Tiles)
+            {
+                if (tile.Reserved)
+                {
+                    Gizmos.color = Color.magenta;
+                    Gizmos.DrawWireCube(new Vector3((tile.x + 0.5f) * 3, (tile.y + 0.5f) * 3, 0), new Vector3(2.5f, 2.5f));
+                }
+                else if (tile.IsHole)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawWireCube(new Vector3((tile.x + 0.5f) * 3, (tile.y + 0.5f) * 3, 0), new Vector3(2.5f, 2.5f));
+                }
+            }
+        }
+
         if (_graph != null && _graph.Root != null)
         {
             Gizmos.color = Color.black;
