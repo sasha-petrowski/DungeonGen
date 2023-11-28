@@ -5,5 +5,5 @@ using UnityEngine.Tilemaps;
 
 public abstract class TilePicker : ScriptableObject
 {
-    public abstract TileBase GetTile(int x, int y);
+    public abstract TileBase GetTile(Vector3Int position);
 }

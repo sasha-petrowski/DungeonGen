@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 
 [CreateAssetMenu(menuName = "Tile Picker/Noise")]
@@ -22,19 +23,18 @@ public class NoiseTilePicker : TilePicker
 
     public int RandomBump = 1;
 
-    public override TileBase GetTile(int x, int y)
+    public override TileBase GetTile(Vector3Int position)
     {
-        x += Offset;
-        y += Offset;
-
+        position.x += Offset;
+        position.y += Offset;
         float frequency = Scale;
 
-        float noise = Mathf.PerlinNoise(x / frequency, y / frequency);
+        float noise = Mathf.PerlinNoise(position.x / frequency, position.y / frequency);
 
         for (int i = 1; i < Octaves; i++)
         {
             frequency *= Continuity;
-            noise = noise * Persistance + Mathf.PerlinNoise(x / frequency, y / frequency) * (1 - Persistance);
+            noise = noise * Persistance + Mathf.PerlinNoise(position.x / frequency, position.y / frequency) * (1 - Persistance);
         }
 
         return Tiles[Mathf.Clamp(Mathf.RoundToInt(Tiles.Count * ((noise - Minus) * Multiplier) + Random.Range(-RandomBump, RandomBump)), 0, Tiles.Count - 1)];

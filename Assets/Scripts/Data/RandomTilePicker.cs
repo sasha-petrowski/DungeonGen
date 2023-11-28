@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 public class RandomTilePicker : TilePicker
 {
     public List<TileBase> Tiles;
-    public override TileBase GetTile(int x, int y)
+    public override TileBase GetTile(Vector3Int position)
     {
         return Tiles[Random.Range(0, Tiles.Count)];
     }

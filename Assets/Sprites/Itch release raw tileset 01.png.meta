@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -1551,7 +1551,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_68
+      name: Agro
       rect:
         serializedVersion: 2
         x: 32
@@ -1761,7 +1761,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_78
+      name: Fly 0
       rect:
         serializedVersion: 2
         x: 48
@@ -1782,7 +1782,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_79
+      name: Fly 1
       rect:
         serializedVersion: 2
         x: 56
@@ -2653,6 +2653,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Agro: 2109180975
       Floor 0: 17333216
       Floor 1: 2054052517
       Floor 2: -2109615489
@@ -2660,6 +2661,8 @@ TextureImporter:
       Floor 4: -264234038
       Floor 5: -1779812527
       Floor 6: -472054484
+      Fly 0: -1094732030
+      Fly 1: 1314038318
       Itch release raw tileset 01_0: 1346155931
       Itch release raw tileset 01_1: -964651329
       Itch release raw tileset 01_10: 1557276336
@@ -2740,7 +2743,6 @@ TextureImporter:
       Itch release raw tileset 01_65: 1198079362
       Itch release raw tileset 01_66: 611704955
       Itch release raw tileset 01_67: -509820053
-      Itch release raw tileset 01_68: 2109180975
       Itch release raw tileset 01_69: -2079299414
       Itch release raw tileset 01_7: 33215105
       Itch release raw tileset 01_70: 692865503
@@ -2750,8 +2752,6 @@ TextureImporter:
       Itch release raw tileset 01_75: -1300345641
       Itch release raw tileset 01_76: 1809477037
       Itch release raw tileset 01_77: 1112331541
-      Itch release raw tileset 01_78: -1094732030
-      Itch release raw tileset 01_79: 1314038318
       Itch release raw tileset 01_8: 1798825109
       Itch release raw tileset 01_80: -1420003387
       Itch release raw tileset 01_81: 1756917931

@@ -32,7 +32,7 @@ public class RoomDungeon : Dungeon
     protected override void SpawnPlayer()
     {
         base.SpawnPlayer();
-        _player.transform.position = Rooms[0].Center;
+        _player.SpawnAt(Rooms[0].Center);
     }
 
     public override void Generate()
@@ -110,7 +110,6 @@ public class RoomDungeon : Dungeon
         DjikstraMap();
         RenderDjikstraMap();
         AddTileFeatures();
-
 
         Generated = true;
     }
