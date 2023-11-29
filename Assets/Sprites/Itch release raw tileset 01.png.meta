@@ -1572,7 +1572,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_69
+      name: Question
       rect:
         serializedVersion: 2
         x: 40
@@ -1677,7 +1677,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_74
+      name: Gorilla 0
       rect:
         serializedVersion: 2
         x: 16
@@ -1698,7 +1698,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_75
+      name: Gorilla 1
       rect:
         serializedVersion: 2
         x: 24
@@ -1719,7 +1719,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_76
+      name: Stalker 0
       rect:
         serializedVersion: 2
         x: 32
@@ -1740,7 +1740,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Itch release raw tileset 01_77
+      name: Stalker 1
       rect:
         serializedVersion: 2
         x: 40
@@ -2663,6 +2663,8 @@ TextureImporter:
       Floor 6: -472054484
       Fly 0: -1094732030
       Fly 1: 1314038318
+      Gorilla 0: 620437570
+      Gorilla 1: -1300345641
       Itch release raw tileset 01_0: 1346155931
       Itch release raw tileset 01_1: -964651329
       Itch release raw tileset 01_10: 1557276336
@@ -2743,15 +2745,10 @@ TextureImporter:
       Itch release raw tileset 01_65: 1198079362
       Itch release raw tileset 01_66: 611704955
       Itch release raw tileset 01_67: -509820053
-      Itch release raw tileset 01_69: -2079299414
       Itch release raw tileset 01_7: 33215105
       Itch release raw tileset 01_70: 692865503
       Itch release raw tileset 01_71: 298633275
       Itch release raw tileset 01_72: 2089690537
-      Itch release raw tileset 01_74: 620437570
-      Itch release raw tileset 01_75: -1300345641
-      Itch release raw tileset 01_76: 1809477037
-      Itch release raw tileset 01_77: 1112331541
       Itch release raw tileset 01_8: 1798825109
       Itch release raw tileset 01_80: -1420003387
       Itch release raw tileset 01_81: 1756917931
@@ -2764,6 +2761,9 @@ TextureImporter:
       Itch release raw tileset 01_96: 382400872
       Itch release raw tileset 01_98: -1805388710
       Itch release raw tileset 01_99: -1588856468
+      Question: -2079299414
+      Stalker 0: 1809477037
+      Stalker 1: 1112331541
       Top Down: 597546516
       Top Flat: -566933757
       Void: -782103588

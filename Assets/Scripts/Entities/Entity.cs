@@ -14,27 +14,63 @@ public abstract class Entity : MonoBehaviour
     [SerializeField]
     protected float _airDrag = 1;
 
+    [Header("Jump")]
+    [SerializeField]
+    private float _jumpTime = 1;
+
     [Header("Refs")]
     [SerializeField]
     protected SpriteRenderer _spriteRenderer;
     [SerializeField]
     protected ParticleSystem _walkParticules;
+    [SerializeField]
+    private ParticleSystem _jumpParticules;
 
 
-
-
+    private float _timeAtJump;
+    private int _layer;
     protected bool _grounded = true;
     protected Vector3 _srOffset;
+
     protected Rigidbody2D _rb;
+    public Rigidbody2D RigidBody => _rb;
+
     protected Vector3 _spawnPoint;
 
     protected virtual void Awake()
     {
+        _layer = gameObject.layer;
         _rb = GetComponent<Rigidbody2D>();
         _srOffset = _spriteRenderer.transform.localPosition;
         _spawnPoint = transform.position;
     }
+    protected virtual void Update()
+    {
+        if (!_grounded)
+        {
+            float stage = (Time.time - _timeAtJump) / _jumpTime;
+            if (stage >= 1)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.zero, 0, (int)UnityLayerMask.Void);
+                if (hit)
+                {
+                    SpawnAt(_spawnPoint);
+                }
 
+                gameObject.layer = (int)UnityLayer.Entity;
+
+                _jumpParticules?.Play();
+                _grounded = true;
+                _spriteRenderer.transform.position = _srOffset + transform.position;
+
+                Standing();
+            }
+            else
+            {
+                _spriteRenderer.transform.position = new Vector3(0, Mathf.Sin(stage * Mathf.PI), 0) + transform.position + _srOffset;
+            }
+        }
+    }
     public void SpawnAt(Vector3 position)
     {
         _spawnPoint = position;
@@ -90,6 +126,18 @@ public abstract class Entity : MonoBehaviour
             Standing();
         }
         return Vector2.zero;
+    }
+    public void Jump()
+    {
+        if (_grounded)
+        {
+            gameObject.layer = (int)UnityLayer.AirEntity;
+            _grounded = false;
+            _rb.drag = _airDrag;
+            _timeAtJump = Time.time;
+
+            _jumpParticules?.Play();
+        }
     }
     protected void Standing()
     {

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfc0cee209ccd34a852bee9700e98a0, type: 3}
+  m_Name: Floor
+  m_EditorClassIdentifier: 
+  Tiles:
+  - {fileID: 11400000, guid: 901895a3531043c4283b4ebd4704d21e, type: 2}
+  - {fileID: 11400000, guid: d3d2d003a2544474fa908e9530a1b714, type: 2}
+  - {fileID: 11400000, guid: 2542e901dcbae6247926233df1a7f83e, type: 2}
+  - {fileID: 11400000, guid: 8bd9a201d68f8f340a7494f6b79c3ffd, type: 2}
+  - {fileID: 11400000, guid: 8bd9a201d68f8f340a7494f6b79c3ffd, type: 2}
+  - {fileID: 11400000, guid: 505a97977ea9472499db0f01e924ccb2, type: 2}
+  - {fileID: 11400000, guid: 74a16f08ad2e9584a8c9656a40e8242a, type: 2}
+  - {fileID: 11400000, guid: af08c526cbf629f41afe50d0cdd1d732, type: 2}
+  Offset: 10000
+  Octaves: 3
+  Scale: 10
+  Persistance: 0.6
+  Continuity: 0.6
+  Multiplier: 1.5
+  Minus: 0.1
+  RandomBump: 1

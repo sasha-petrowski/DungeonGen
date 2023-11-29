@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,21 +45,15 @@ public class FadeBehaviour : MonoBehaviour
     {
         _timeSpent += Time.deltaTime;
 
-        if(_timeSpent > _timer)
+        if(_timeSpent >= _timer)
         {
-            if (_action == FadeAction.Out)
+            if (_action == FadeAction.Flash)
             {
-                _sr.color = new Color(1, 1, 1, 0);
-
-                enabled = false;
+                Play(FadeAction.Out, _timer * 2f);
             }
-            else if(_action == FadeAction.In | _action == FadeAction.Flash)
+            else
             {
-                _sr.color = new Color(1, 1, 1, 1);
-
-                enabled = false;
-
-                if (_action == FadeAction.Flash) Play(FadeAction.Out, _timer * 2f);
+                Finish();
             }
         }
         else
@@ -71,6 +66,20 @@ public class FadeBehaviour : MonoBehaviour
             {
                 _sr.color = new Color(1, 1, 1, _timeSpent / _timer);
             }
+        }
+    }
+
+    public void Finish()
+    {
+        enabled = false;
+
+        if (_action == FadeAction.In)
+        {
+            _sr.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            _sr.color = new Color(1, 1, 1, 0);
         }
     }
 }
