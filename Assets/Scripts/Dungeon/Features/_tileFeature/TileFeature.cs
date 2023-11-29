@@ -33,4 +33,13 @@ public class TileFeature : Feature
 
         return true;
     }
+
+    public override bool IsInside(Tile tile)
+    {
+        return Tile == tile;
+    }
+    public override bool IsEdge(Tile tile)
+    {
+        return Tile == tile;
+    }
 }

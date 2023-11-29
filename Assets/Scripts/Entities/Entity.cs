@@ -18,6 +18,9 @@ public abstract class Entity : MonoBehaviour
     [SerializeField]
     private float _jumpTime = 1;
 
+    [Header("Fighting")]
+    public float PushForce = 5;
+
     [Header("Refs")]
     [SerializeField]
     protected SpriteRenderer _spriteRenderer;
@@ -31,11 +34,13 @@ public abstract class Entity : MonoBehaviour
     private int _layer;
     protected bool _grounded = true;
     protected Vector3 _srOffset;
-
     protected Rigidbody2D _rb;
+    protected Vector3 _spawnPoint;
+
+
+    public bool Grounded => _grounded;
     public Rigidbody2D RigidBody => _rb;
 
-    protected Vector3 _spawnPoint;
 
     protected virtual void Awake()
     {
@@ -44,6 +49,7 @@ public abstract class Entity : MonoBehaviour
         _srOffset = _spriteRenderer.transform.localPosition;
         _spawnPoint = transform.position;
     }
+
     protected virtual void Update()
     {
         if (!_grounded)
@@ -54,10 +60,12 @@ public abstract class Entity : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.zero, 0, (int)UnityLayerMask.Void);
                 if (hit)
                 {
-                    SpawnAt(_spawnPoint);
+                    if (this is PlayerEntity) SpawnAt(_spawnPoint);
+
+                    else Destroy(gameObject);
                 }
 
-                gameObject.layer = (int)UnityLayer.Entity;
+                gameObject.layer = _layer;
 
                 _jumpParticules?.Play();
                 _grounded = true;
@@ -127,15 +135,17 @@ public abstract class Entity : MonoBehaviour
         }
         return Vector2.zero;
     }
-    public void Jump()
+    public void Jump(bool forceJump = false)
     {
-        if (_grounded)
+        if (_grounded | forceJump)
         {
             gameObject.layer = (int)UnityLayer.AirEntity;
             _grounded = false;
             _rb.drag = _airDrag;
             _timeAtJump = Time.time;
-
+        }
+        if (_grounded)
+        {
             _jumpParticules?.Play();
         }
     }

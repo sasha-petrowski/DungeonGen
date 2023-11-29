@@ -16,11 +16,16 @@ public class DungeonEditor : Editor
             return;
         }
 
+        if (GUILayout.Button("Randomize"))
+        {
+            dungeon.Seed = Random.Range(int.MinValue, int.MaxValue);
+            dungeon.Generate();
+        }
         if (GUILayout.Button("Generate"))
         {
             dungeon.Generate();
         }
-        
+
         if (dungeon.Generated && GUILayout.Button("Tilemap"))
         {
             dungeon.CreateTilemap();

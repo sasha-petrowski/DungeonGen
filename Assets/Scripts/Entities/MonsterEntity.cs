@@ -84,7 +84,7 @@ public class MonsterEntity : Entity
             }
         }
     }
-    private bool TrySetTarget(Entity entity)
+    public bool TrySetTarget(Entity entity)
     {
         if (entity != null & AgroTarget == null)
         {
@@ -106,7 +106,7 @@ public class MonsterEntity : Entity
 
         float distance = relative.magnitude;
 
-        return !Physics2D.Raycast(transform.position, relative / distance, distance, (int)UnityLayerMask.Wall);
+        return !Physics2D.Raycast(transform.position, relative / distance, distance, (int)UnityLayerMask.Wall | (int)UnityLayerMask.Terrain);
     }
 
     protected override void Update()

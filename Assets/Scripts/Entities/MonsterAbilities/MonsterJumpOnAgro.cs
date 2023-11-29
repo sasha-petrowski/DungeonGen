@@ -8,12 +8,9 @@ public class MonsterJumpOnAgro: MonsterAbility
 
     public override void OnState(MonsterState state) 
     {
-        if(state == MonsterState.Agro)
+        if(state == MonsterState.Agro && _entity.Grounded)
         {
-            Debug.Log("Ability Jump on agro");
-
             _entity.RigidBody.velocity = (_entity.AgroTarget.transform.position - transform.position).normalized * Speed;
-            Debug.Log(_entity.RigidBody.velocity);
             _entity.Jump();
         }
     }

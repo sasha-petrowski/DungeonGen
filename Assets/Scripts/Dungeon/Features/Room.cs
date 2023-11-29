@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Room : Feature
 {
+    public int DjikstraMap = -1;
+
     public int Width;
     public int Height;
 
@@ -131,5 +132,24 @@ public class Room : Feature
         {
             yield return Dungeon.Tiles[x + Width, Y];
         }
+    }
+    public IEnumerable<Tile> Tiles()
+    {
+        for (int X = x; X < x + Width; X++)
+        {
+            for (int Y = y; Y < y + Height; Y++)
+            {
+                yield return Dungeon.Tiles[X, Y];
+            }
+        }
+    }
+
+    public override bool IsInside(Tile tile)
+    {
+        return (tile.x >= x & tile.x < x + Width & tile.y >= y & tile.y < y + Height);
+    }
+    public override bool IsEdge(Tile tile)
+    {
+        return IsInside(tile) && (tile.x == x | tile.x == x + Width - 1 | tile.y == y | tile.y == y + Height - 1);
     }
 }

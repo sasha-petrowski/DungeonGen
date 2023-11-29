@@ -7,6 +7,9 @@ using System;
 
 public class RoomDungeon : Dungeon
 {
+    public Transform MonsterParent;
+    public MonsterSpawnData MonsterSpawn;
+
     [Header("Rooms")]
     public int MaxRoomWidth = 16;
     public int MinRoomWidth = 4;
@@ -107,8 +110,6 @@ public class RoomDungeon : Dungeon
         {
             Room room = next.Value;
             next = next.Next;
-            int x;
-            int y;
             for(int i = 0; i < PlaceRoomRetry; i++)
             {
                 if (room.TryPlace(Random(1, Width - room.Width), Random(1, Height - room.Height), this))
@@ -145,6 +146,8 @@ public class RoomDungeon : Dungeon
         RenderDjikstraMap();
         AddTileFeatures();
 
+        //CreateTilemap();
+
         SpawnMonsters();
 
         Generated = true;
@@ -152,7 +155,24 @@ public class RoomDungeon : Dungeon
 
     private void SpawnMonsters()
     {
-        throw new NotImplementedException();
+        GameObject[] array = new GameObject[MonsterParent.childCount];
+        int i = 0;
+        foreach (Transform item in MonsterParent)
+        {
+            array[i] = item.gameObject;
+            i++;
+        }
+        foreach (GameObject go in array)
+        {
+            DestroyImmediate(go);
+        }
+
+        foreach (Room room in Rooms)
+        {
+            if (room.DjikstraMap < MaxRoomWidth / 2) continue;
+
+            MonsterSpawn.SpawnMonsters(room.Center, MonsterParent, room.DjikstraMap);
+        }
     }
 
     private void AddTileFeatures()
@@ -193,26 +213,33 @@ public class RoomDungeon : Dungeon
 
         foreach (Tile tile in Tiles)
         {
-            int value = tile.DjikstraMap * 4 % 765;
-
-            if (tile.DjikstraMap == -1)
+            if(tile.Feature != null && tile.Feature.MainPath && tile.Feature.IsEdge(tile))
             {
-                colorMap[tile.x + tile.y * Width] = Color.black;
-            }
-            else if (value < 255)
-            {
-                // vert > bleu
-                colorMap[tile.x + tile.y * Width] = new Color(0, (255 - value) / 255f, value / 255f);
-            }
-            else if (value < 510)
-            {
-                // bleu > rouge
-                colorMap[tile.x + tile.y * Width] = new Color((value - 255) / 255f, 0, (510 - value) / 255f);
+                colorMap[tile.x + tile.y * Width] = Color.white;
             }
             else
             {
-                // rouge > vert
-                colorMap[tile.x + tile.y * Width] = new Color((765 - value) / 255f, (value - 510) / 255f, 0);
+                int value = tile.DjikstraMap * 4 % 765;
+
+                if (tile.DjikstraMap == -1)
+                {
+                    colorMap[tile.x + tile.y * Width] = Color.black;
+                }
+                else if (value < 255)
+                {
+                    // vert > bleu
+                    colorMap[tile.x + tile.y * Width] = new Color(0, (255 - value) / 255f, value / 255f);
+                }
+                else if (value < 510)
+                {
+                    // bleu > rouge
+                    colorMap[tile.x + tile.y * Width] = new Color((value - 255) / 255f, 0, (510 - value) / 255f);
+                }
+                else
+                {
+                    // rouge > vert
+                    colorMap[tile.x + tile.y * Width] = new Color((765 - value) / 255f, (value - 510) / 255f, 0);
+                }
             }
         }
 
@@ -237,7 +264,7 @@ public class RoomDungeon : Dungeon
         int nextX;
         int nextY;
         int nextTime;
-        Tile tile;
+        Tile tile = null;
 
         while (toVisit.First != null)
         {
@@ -256,13 +283,63 @@ public class RoomDungeon : Dungeon
                 if (neighbor.Feature == null | visited.Contains(neighbor)) continue;
                 if (neighbor.Feature != tile.Feature)
                 {
-                    if (!((tile.Feature is Room && neighbor.Feature is Room) || (tile.Feature is Corridor tileCorridor && tileCorridor.Links.Contains(neighbor.Feature)) || (neighbor.Feature is Corridor corridor && corridor.Links.Contains(tile.Feature)))) continue;
+                    if (!((tile.Feature is Room && neighbor.Feature is Room) || (tile.Feature.Links.Contains(neighbor.Feature)))) continue;
                 }
 
                 visited.Add(neighbor);
                 neighbor.DjikstraMap = nextTime;
                 toVisit.AddLast(neighbor);
             }
+        }
+
+        foreach(Room room in Rooms)
+        {
+            int count = 0;
+            int sum = 0;
+            foreach (Tile roomTile in room.Tiles())
+            {
+                count++;
+                sum += roomTile.DjikstraMap;
+            }
+
+            room.DjikstraMap = sum / count;
+        }
+
+        SetMainPath(tile);
+    }
+    private void SetMainPath(Tile from)
+    {
+        Tile firstTile = Tiles[Mathf.RoundToInt(Rooms[0].x + Rooms[0].Width / 2), Mathf.RoundToInt(Rooms[0].y + Rooms[0].Height / 2)];
+        Rooms[0].MainPath = true;
+
+        int nextX;
+        int nextY;
+        Tile tile = from;
+        tile.Feature.MainPath = true;
+
+        while (tile != null && tile != firstTile)
+        {
+            tile.Feature.MainPath = true;
+
+            Tile nextMove = null;
+            int bestMove = tile.DjikstraMap;
+            for (int direction = 0; direction < 4; direction++)
+            {
+                nextX = tile.x + Pathfinding.directionX[direction];
+                nextY = tile.y + Pathfinding.directionY[direction];
+
+                if(!TryGetTile(nextX, nextY, out Tile neighbor) || neighbor.DjikstraMap >= bestMove | neighbor.Feature == null) continue;
+
+                if (neighbor.Feature != null & neighbor.Feature != tile.Feature)
+                {
+                    if (!((tile.Feature is Room && neighbor.Feature is Room) || (tile.Feature.Links.Contains(neighbor.Feature)))) continue;
+                }
+
+                nextMove = neighbor;
+                bestMove = neighbor.DjikstraMap;
+            }
+
+            tile = nextMove;
         }
     }
     private void LinkRooms()
@@ -381,7 +458,7 @@ public class RoomDungeon : Dungeon
     }
     private void RemoveSimilarLinks()
     {
-        float[] sqrMag = new float[16];
+        float[] sqrMag = new float[32];
 
         foreach (DPoint point in _dPoints)
         {

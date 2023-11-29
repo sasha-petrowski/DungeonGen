@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3858667220581176210}
   - component: {fileID: 5815635286254460948}
   - component: {fileID: 1139858724700935952}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Agro-Detector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
