@@ -4971,7 +4971,7 @@ Transform:
   - {fileID: 5117623714403805956}
   - {fileID: 8135192451471456077}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &5823501849426544025
 CircleCollider2D:
@@ -5073,7 +5073,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6825232619127491150
 Transform:
   m_ObjectHideFlags: 0
@@ -5103,7 +5103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Distance: 5
   RayRecursion: 3
-  RaycountPerSide: 8
+  RaycountPerSide: 30
 --- !u!23 &2828553007348547005
 MeshRenderer:
   m_ObjectHideFlags: 0
